@@ -5,7 +5,14 @@
 	$login = new Login();
 	$user_data = $login->check_login($_SESSION['user_id']);
 	
-	//posting starts here
+	if(isset($_GET['id']) && is_numeric($_GET['id'])){
+		$profile = new Profile();
+		$profile_data = $profile->get_profile($_GET['id']);
+	
+		if(is_array($profile_data)){
+			$user_data = $profile_data[0];
+		}
+	}
 	
 	if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -15,7 +22,7 @@
 		
 		if($result == "")
 		{
-			header("Location: index.php");
+			header("Location: single_post.php?id=$_GET[id]");
 			die;
 		}else
 		{
@@ -26,17 +33,16 @@
 		}
 	}
 	
-	//collect post
-	$post = new Post();
-	$id = $_SESSION['user_id'];
+	$Post = new Post();
+	$ROW = false;
 	
-	$posts = $post->get_posts($id);
-	
-	//collect friends
-	$user = new User();
-	$id = $_SESSION['user_id'];
-	
-	$friends = $user->get_friends($id);
+	$ERROR = "";
+	if(isset($_GET['id'])){
+		
+		$ROW = $Post->get_one_post($_GET['id']);
+	}else{
+		$ERROR = "No post was found";
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +50,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum PUTO</title>
+    <title>Single Post</title>
 
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
@@ -230,7 +236,23 @@
                     </div>
                 </div>
                 <!--Status Posting form-->
-                <form method="post" class="create-post">
+                
+
+                <!--Feeds-->
+                <div id="post_bar "class="feeds">
+                    
+					<?php
+					
+					$user = new User();
+					
+					if(is_array($ROW)){
+						$user = new User();
+						$ROW_USER = $user->get_user($ROW['user_id']);
+						include("index-post.php");
+					}
+					
+				?>  
+				<form method="post" class="create-post">
                     <div class="profile-photo">
 						<?php
 						
@@ -243,49 +265,25 @@
 						?>
                         <img src="<?php echo $image ?>">
                     </div>
-                    <input name="post" type="text" placeholder="Anything you want to post?" id="create-post">
+                    <input name="post" type="text" placeholder="Post a comment." id="create-post">
+					<input type="hidden" name="parent" value="<?php echo $ROW['post_id'] ?>">
                     <input type="submit" value="Post" class="btn btn-primary">
                 </form>
-
-                <!--Feeds-->
-                <div id="post_bar "class="feeds">
-                    
+                
 					<?php
 					
-					$DB = new Database();
-					$user_class = new User;
-					
-					$followers = $user_class->get_following($_SESSION['user_id'],"user");
-					
-					$followers_ids = false;
-					if(is_array($followers)){
+						$comments = $Post->get_comments($ROW['post_id']);
 						
-						$follower_ids = array_column($followers, "user_id");
-						$follower_ids = implode("','", $follower_ids);
-					}
-					
-					if($followers_ids){
-						$sql = "select * from posts where user_id in('" .$follower_ids. "') limit 30";
-						$posts = $DB->read($sql);
-					}
-					if($posts)
-					{
-						
-						foreach ($posts as $ROW){
-							#code...
+						if(is_array($comments)){
 							
-							$user = new User();
-							$ROW_USER = $user->get_user($ROW['user_id']);
-							
-							include("index-post.php");
+							foreach($comments as $COMMENT){
+								#code...
+								
+								include("index-comment.php");
+							}
 						}
-					}
-					
-				?>
-			
-                    
-                    
-                </div>
+					?>
+				</div>
             </div>
             <!--Right Sidebar Navigations-->
             <div class="right">

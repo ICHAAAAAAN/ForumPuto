@@ -1,3 +1,4 @@
+<div id="post_bar">
 <div id="post">
 	<div>
 		<?php
@@ -13,22 +14,16 @@
 	</div>
 	<div>
 		<div style="font-weight:bold; color:#405d9b;"><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></div>
-		<?php echo $ROW['post'] ?>
+		<?php echo $COMMENT['post'] ?>
 		<br/>
 		
 		<?php
 			$likes = "";
 			
-			$likes = ($ROW['likes'] > 0) ? "(" .$ROW['likes']. ")" : "" ;
+			$likes = ($COMMENT['likes'] > 0) ? "(" .$COMMENT['likes']. ")" : "" ;
 		?>		
-		<a href="like.php?type=post&id=<?php echo $ROW['post_id'] ?>">Like .<?php echo $likes ?></a> 
-		<?php
-			$comments = "";
-			
-			$comments = ($ROW['comments'] > 0) ? "(" .$ROW['comments']. ")" : "" ;
-		?>	
-		<a href="single_profile_post.php?id=<?php echo $ROW['post_id'] ?>">Comment<?php echo $comments ?></a> . 
-		
-		<?php echo $ROW['dates'] ?>
+		<a href="like.php?type=post&id=<?php echo $COMMENT['post_id'] ?>">Like<?php echo $likes ?></a> . 
+		. <?php echo $COMMENT['dates'] ?>
 	</div>
+</div>
 </div>

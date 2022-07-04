@@ -15,10 +15,10 @@
                 <img src="<?php echo $image ?>">
             </div>
             <div class="ingo">
-				<a href = "index.php?id=$ROW[user_id]">
+				<a href = "index.php?id=$COMMENT[user_id]">
                 <h3><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></h3>
 				</a>
-                <small><?php echo $ROW['dates'] ?></small>
+                <small><?php echo $COMMENT['dates'] ?></small>
             </div>
         </div>
             <span class="edit">
@@ -26,20 +26,14 @@
             </span>
         </div>
 		<div class="caption">
-            <p><?php echo $ROW['post'] ?></p>
+            <p><?php echo $COMMENT['post'] ?></p>
 			<br/>
 		</div>	
 		<?php
 			$likes = "";
 			
-			$likes = ($ROW['likes'] > 0) ? "(" .$ROW['likes']. ")" : "" ;
+			$likes = ($COMMENT['likes'] > 0) ? "(" .$COMMENT['likes']. ")" : "" ;
 		?>
-		<a href="like.php?type=post&id=<?php echo $ROW['post_id'] ?>">Like<?php echo $likes ?></a> . 
-		<?php
-			$comments = "";
-			
-			$comments = ($ROW['comments'] > 0) ? "(" .$ROW['comments']. ")" : "" ;
-		?>	
-		<a href="single_post.php?id=<?php echo $ROW['post_id'] ?>">Comment<?php echo $comments ?></a>
+		<a href="like.php?type=post&id=<?php echo $COMMENT['post_id'] ?>">Like<?php echo $likes ?></a> . 
 </div>
 	

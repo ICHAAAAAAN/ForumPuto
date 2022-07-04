@@ -7,6 +7,7 @@
 	include("classes/user.php");
 	include("classes/post.php");
 	include("classes/profile.php");
+	include("classes/time.php");
 
  	if(!defined("ROOT")){
 

@@ -5,11 +5,11 @@
 		$post_class = new Post();
 		$user_class = new User();
 
-		$followers = $post_class->get_likes($user_data['user_id'],"user");
+		$following = $user_class->get_following($user_data['user_id'],"user");
 
-		if(is_array($followers)){
+		if(is_array($following)){
 
-			foreach ($followers as $follower) {
+			foreach ($following as $follower) {
 				# code...
 				$FRIEND_ROW = $user_class->get_user($follower['user_id']);
 				include("user.php");
@@ -17,7 +17,7 @@
 
 		}else{
 
-			echo "No followers were found!";
+			echo "No following were found!";
 		}
 
 

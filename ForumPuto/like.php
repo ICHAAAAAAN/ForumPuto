@@ -22,7 +22,12 @@ if(isset($_SERVER['HTTP_REFERER'])){
 			if(in_array($_GET['type'], $allowed)){
 				
 				$post = new Post();
+				$user_class = new User();
 				$post->like_post($_GET['id'],$_GET['type'],$_SESSION['user_id']);
+				
+				if($_GET['type'] == "user"){
+					$user_class->follow_user($_GET['id'],$_GET['type'],$_SESSION['user_id']);
+				}
 			}
 		}
 

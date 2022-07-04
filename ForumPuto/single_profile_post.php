@@ -13,7 +13,6 @@
 			$user_data = $profile_data[0];
 		}
 	}
-	//posting starts here
 	
 	if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -23,7 +22,7 @@
 		
 		if($result == "")
 		{
-			header("Location: profile.php");
+			header("Location: single_profile_post.php?id=$_GET[id]");
 			die;
 		}else
 		{
@@ -34,16 +33,16 @@
 		}
 	}
 	
-	//collect post
-	$post = new Post();
-	$id = $user_data['user_id'];
+	$Post = new Post();
+	$ROW = false;
 	
-	$posts = $post->get_posts($id);
-	
-	//collect friends
-	$user = new User();
-	
-	$friends = $user->get_friends($id);
+	$ERROR = "";
+	if(isset($_GET['id'])){
+		
+		$ROW = $Post->get_one_post($_GET['id']);
+	}else{
+		$ERROR = "No post was found";
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,25 +133,44 @@
         </div>
 
      	<!--below cover area-->
-		
+
+        <!--post-->
+	<div id="post_bar">
 		<?php
-			$section = "default";
-			if(isset($_GET['section'])){
-				$section = $_GET['section'];
-			}
-			
-			if($section == "default"){
-				include("profile_content_default.php");
-				
-			}elseif($section == "followers"){
-				include("profile_content_followers.php");
-			}
-				
-	
-			
-		?>
-		
-		
+					
+					$user = new User();
+					
+					if(is_array($ROW)){
+						$user = new User();
+						$ROW_USER = $user->get_user($ROW['user_id']);
+						include("post.php");
+					}
+					
+				?>  
 	</div>
+	<div style="display: flex;">
+
+       <div style="min-height:400px; flex:2.5; padding:20px; padding-right:0px;">
+		<div style="border:solid thin #aaa; padding:10px; background-color:white;">
+			<form method="post">
+				<textarea name="post" placeholder="Post a comment"></textarea>
+				<input type="hidden" name="parent" value="<?php echo $ROW['post_id'] ?>">
+				<input id="post_button" type="submit">
+				<br>
+			</form>
+		</div>
+		<?php
+					
+			$comments = $Post->get_comments($ROW['post_id']);
+						
+			if(is_array($comments)){
+							
+				foreach($comments as $COMMENT){
+					#code...
+								
+					include("profile-comment.php");
+				}
+			}
+		?>
 </body>
 </html>

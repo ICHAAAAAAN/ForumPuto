@@ -1,4 +1,5 @@
 <div id="friends">
+	
 	<?php
 			
 		$image = "./pics/dp17.jpg";

@@ -1,28 +1,12 @@
 <div style="display: flex;">
-        <!--friend area-->
-       <div style="min-height:400px;flex:1;">	
-           <div id="friends_bar">
-            Friends<br>
-              <?php
-				if($friends)
-				{
-						
-					foreach ($friends as $FRIEND_ROW){
-						#code...
-						include("user.php");
-					}
-				}
-					
-			?>
-           </div>
-       </div>
-
-       <div style="min-height:400px; flex:2.5; padding:20px; padding-right:0px;">
+        
+		<!--post area-->
+       <div style="min-height:400px; flex:2.5; padding:20px; padding-left:0px;">
 	
 		<div style="border:solid thin #aaa; padding:10px; background-color:white;">
 			<form method="post">
 				<textarea name="post" placeholder="Anything you want to post?"></textarea>
-				<input id="post_button" type="submit">
+				<input id="post_button" type="submit" value="Post">
 				<br>
 			</form>
 		</div>
@@ -51,4 +35,21 @@
 		?>
 	</div>
 	</div>
+	<!--friend area-->
+       <div style="min-height:400px;flex:1;">	
+           <div id="friends_bar">
+            Friends<br>
+              <?php
+				if($friends)
+				{
+						
+					foreach ($friends as $FRIEND_ROW){
+						#code...
+						include("user.php");
+					}
+				}
+					
+			?>
+           </div>
+       </div>
 	</div>

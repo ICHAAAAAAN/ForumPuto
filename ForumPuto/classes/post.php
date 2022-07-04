@@ -12,10 +12,18 @@ class Post
 			
 			$post = addslashes($data['post']);
 			$post_id = $this->create_postid();
-			
-			$query = "insert into  posts (post_id,user_id,post) values ('$post_id','$user_id','$post')";
-			
+			$parent = 0;
 			$DB = new Database();
+
+			
+			if(isset($data['parent']) && is_numeric($data['parent'])){
+				
+				$parent = $data['parent'];
+				
+				$sql = "update posts set comments = comments + 1 where post_id = '$parent' limit 1";
+				$DB->save($sql);
+			}
+			$query = "insert into  posts (post_id,user_id,post,parent) values ('$post_id','$user_id','$post','$parent')";
 			$DB->save($query);
 			
 		}else
@@ -39,6 +47,44 @@ class Post
 			return $result;
 		}else
 		{
+			return false;
+		}
+	}
+	
+	public function get_comments($id)
+	{
+		
+		$query = "select * from  posts where parent = '$id' order by id asc limit 10";
+			
+		$DB = new Database();
+		$result = $DB->read($query);
+		
+		if($result)
+		{
+			return $result;
+		}else
+		{
+			return false;
+		}
+	}
+	
+	public function get_one_post($post_id)
+	{
+		
+		if(!is_numeric($post_id)){
+			
+			return false;
+		}
+		
+		$query = "select * from posts where post_id = '$post_id' limit 1";
+		
+		$DB = new Database();
+		$result = $DB->read($query);
+		
+		if($result)
+		{
+			return $result[0];
+		}else{
 			return false;
 		}
 	}
